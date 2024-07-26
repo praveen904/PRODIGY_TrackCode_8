@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Authentication</title>
 </head>
 <body>
     <?php
@@ -19,8 +19,9 @@
     else{
         echo "Connection Successfull !!!<br><br>";
     }
+    $hashedPassword=password_hash($password,PASSWORD_DEFAULT);
     $stmp=$conn->prepare("SELECT*FROM praveen.users WHERE username=? and password=?");
-    $stmp->bind_param("ss",$username,$password);
+    $stmp->bind_param("ss",$username,$hashedPassword);
 
     if($stmp->execute()===TRUE){
         $res=$stmp->get_result();

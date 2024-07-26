@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Authentication</title>
 </head>
 <body>
     <?php
     $username=$_POST["username"];
-    $pass=$_POST["password"];
+    $password=$_POST["password"];
     $email=$_POST["email"];
 
+    
    
     $conn=new mysqli("localhost","root","","praveen");
 
@@ -20,12 +21,14 @@
     else{
         echo "Connection Successfull !!!<br><br>";
     }
-    $stmp=$conn->prepare("INSERT INTO praveen.users(username,password,email) VALUE(?,?,?)");
-    $stmp->bind_param("sss",$username,$pass,$email);
+    $hashedPassword=password_hash($password,PASSWORD_DEFAULT);
+    $stmp=$conn->prepare("INSERT INTO praveen.users(username,password,email) VALUES(?,?,?)");
+    $stmp->bind_param("sss",$username,$hashedPassword,$email);
 
     if($stmp->execute()==TRUE){
         echo "!!!!!!!!! SUCCESS !!!!!!!!!<br>";
         header("Location:login.html");
+        exit();
     }
     else{
         echo"INSERT FAILED!!!".$stmp->error;
